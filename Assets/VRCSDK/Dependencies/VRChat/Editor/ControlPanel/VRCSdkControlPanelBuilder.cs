@@ -31,7 +31,6 @@ public partial class VRCSdkControlPanel : EditorWindow
     static Texture _perfIcon_Poor;
     static Texture _perfIcon_VeryPoor;
     static Texture _bannerImage;
-    static Texture _settingsIcon;
 
     private static bool isLoad = false;
 

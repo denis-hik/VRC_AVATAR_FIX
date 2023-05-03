@@ -1,9 +1,13 @@
-﻿using UnityEditor;
+﻿using System.Drawing;
+using Pumkin.DataStructures;
+using UnityEditor;
 using UnityEngine;
 using VRC.Core;
 using VRC.Editor;
 using VRC.SDKBase.Editor;
 using VRCSDK.Dependencies.VRChat.Scripts.DenisHik;
+using Color = UnityEngine.Color;
+using FontStyle = UnityEngine.FontStyle;
 
 [ExecuteInEditMode]
 public partial class VRCSdkControlPanel : EditorWindow
@@ -36,6 +40,7 @@ public partial class VRCSdkControlPanel : EditorWindow
     public static GUIStyle listButtonStyleSelected;
     public static GUIStyle scrollViewSeparatorStyle;
     public static GUIStyle searchBarStyle;
+    private bool isSettings = false;
 
     void InitializeStyles()
     {
@@ -148,16 +153,15 @@ public partial class VRCSdkControlPanel : EditorWindow
 
     public const int SdkWindowWidth = 518;
 
-    private readonly GUIContent[] _toolbarLabels = new GUIContent[4]
+    private readonly GUIContent[] _toolbarLabels = new GUIContent[3]
     {
         new GUIContent("Authentication"),
         new GUIContent("Builder"),
         new GUIContent("Content Manager"),
-        new GUIContent("Settings")
     };
 
-    private readonly bool[] _toolbarOptionsLoggedIn = new bool[4] {true, true, true, true};
-    private readonly bool[] _toolbarOptionsNotLoggedIn = new bool[4] {true, false, false, true};
+    private readonly bool[] _toolbarOptionsLoggedIn = new bool[3] {true, true, true};
+    private readonly bool[] _toolbarOptionsNotLoggedIn = new bool[3] {true, false, false};
 
     void OnGUI()
     {
@@ -175,6 +179,18 @@ public partial class VRCSdkControlPanel : EditorWindow
         GUILayout.BeginVertical();
 
         GUILayout.Box(_bannerImage);
+        GUIStyle s = new GUIStyle()
+        {
+            fixedWidth = 20f,
+            fixedHeight = 20f,
+            imagePosition = ImagePosition.ImageOnly,
+            padding = new RectOffset(0, 0, 0, 0),
+
+        };
+        if (GUI.Button(new Rect (SdkWindowWidth - 40 , 10, 30, 30), Icons.Settings))
+        {
+            isSettings = !isSettings;
+        }
         
 
         if (Application.isPlaying)
@@ -193,7 +209,7 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         EnvConfig.SetActiveSDKDefines();
 
-        int showPanel = GUILayout.Toolbar(VRCSettings.ActiveWindowPanel, _toolbarLabels, APIUser.IsLoggedIn ? _toolbarOptionsLoggedIn : _toolbarOptionsNotLoggedIn,  null, GUILayout.Width(SdkWindowWidth));
+        int showPanel = GUILayout.Toolbar(VRCSettings.ActiveWindowPanel, _toolbarLabels, isSettings ? new bool[3] {false, false, false} : APIUser.IsLoggedIn ? _toolbarOptionsLoggedIn : _toolbarOptionsNotLoggedIn,  null, GUILayout.Width(SdkWindowWidth));
 
         // Only show Account or Settings panels if not logged in
         if (APIUser.IsLoggedIn == false && showPanel != 3)
@@ -210,21 +226,25 @@ public partial class VRCSdkControlPanel : EditorWindow
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
-        switch (showPanel)
+        if (isSettings)
         {
-            case 1:
-                ShowBuilders();
-                break;
-            case 2:
-                ShowContent();
-                break;
-            case 3:
-                ShowSettings();
-                break;
-            case 0:
-            default:
-                ShowAccount();
-                break;
+            ShowSettings();
+        }
+        else
+        {
+            switch (showPanel)
+            {
+                case 1:
+                    ShowBuilders();
+                    break;
+                case 2:
+                    ShowContent();
+                    break;
+                case 0:
+                default:
+                    ShowAccount();
+                    break;
+            }
         }
     }
 
