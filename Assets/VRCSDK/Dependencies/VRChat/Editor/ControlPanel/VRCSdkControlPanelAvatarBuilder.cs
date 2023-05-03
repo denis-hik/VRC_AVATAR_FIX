@@ -11,6 +11,9 @@ using VRC.SDKBase.Editor.BuildPipeline;
 using VRC.SDKBase.Editor.Validation;
 using VRC.SDKBase.Validation.Performance;
 using VRC.SDKBase.Validation.Performance.Stats;
+using VRChat.Analytics;
+using VRCSDK.Dependencies.VRChat.Scripts;
+using VRCSDK.Dependencies.VRChat.Scripts.DenisHik;
 using Object = UnityEngine.Object;
 
 namespace VRC.SDKBase.Editor

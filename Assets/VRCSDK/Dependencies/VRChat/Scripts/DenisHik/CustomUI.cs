@@ -1,8 +1,9 @@
-﻿using UnityEditor;
+﻿using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using VRC.Core;
 
-namespace VRCSDK.Dependencies.VRChat.Scripts
+namespace VRCSDK.Dependencies.VRChat.Scripts.DenisHik
 {
     public delegate void OnCancel();
     public delegate void OnRetry();
@@ -20,7 +21,6 @@ namespace VRCSDK.Dependencies.VRChat.Scripts
             {
                 onRetry();
             }
-            
         }
     }
 }

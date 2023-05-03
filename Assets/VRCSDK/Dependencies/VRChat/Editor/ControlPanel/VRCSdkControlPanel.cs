@@ -3,6 +3,7 @@ using UnityEngine;
 using VRC.Core;
 using VRC.Editor;
 using VRC.SDKBase.Editor;
+using VRCSDK.Dependencies.VRChat.Scripts.DenisHik;
 
 [ExecuteInEditMode]
 public partial class VRCSdkControlPanel : EditorWindow
@@ -174,6 +175,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         GUILayout.BeginVertical();
 
         GUILayout.Box(_bannerImage);
+        
 
         if (Application.isPlaying)
         {

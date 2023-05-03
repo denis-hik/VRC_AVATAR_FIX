@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using VRC.Core;
+using VRCSDK.Dependencies.VRChat.Scripts.DenisHik;
 using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using UnityEditor;

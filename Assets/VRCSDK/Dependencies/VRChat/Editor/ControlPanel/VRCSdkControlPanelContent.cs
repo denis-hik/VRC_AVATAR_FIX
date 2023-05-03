@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.Networking;
 using VRC.Core;
+using VRCSDK.Dependencies.VRChat.Editor;
 
 public partial class VRCSdkControlPanel : EditorWindow
 {

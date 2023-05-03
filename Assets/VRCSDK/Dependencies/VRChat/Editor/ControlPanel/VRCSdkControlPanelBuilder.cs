@@ -5,9 +5,13 @@ using System.Reflection;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEngine.Networking;
+using VRC.Core;
 using VRC.SDKBase.Validation.Performance;
 using Object = UnityEngine.Object;
 using VRC.SDKBase.Editor;
+using VRCSDK.Dependencies.VRChat.Editor;
+using VRCSDK.Dependencies.VRChat.Scripts.DenisHik;
 
 public partial class VRCSdkControlPanel : EditorWindow
 {
@@ -27,15 +31,42 @@ public partial class VRCSdkControlPanel : EditorWindow
     static Texture _perfIcon_Poor;
     static Texture _perfIcon_VeryPoor;
     static Texture _bannerImage;
+    static Texture _settingsIcon;
+
+    private static bool isLoad = false;
 
     public void ResetIssues()
     {
+        Debug.Log("Reload reset");
         GUIErrors.Clear();
         GUIInfos.Clear();
         GUIWarnings.Clear();
         GUILinks.Clear();
         GUIStats.Clear();
         CheckedForIssues = false;
+        
+        if (APIUser.CurrentUser != null)
+        {
+            string url = APIUser.CurrentUser.currentAvatarImageUrl;
+            
+            Debug.Log(url);
+            
+            if (url != null && !isLoad)
+            {
+                Debug.Log(">" + url);
+                Utils u = new Utils();
+                EditorCoroutine.Start(VRCCachedWebRequest.Get(url, OnDone));
+                void OnDone(Texture2D texture)
+                {
+                    if (texture != null)
+                    {
+                        isLoad = true;
+                        _bannerImage = Utils.Resize(texture, 500,100);
+                    }
+                }
+            }
+        }
+
     }
 
     public bool CheckedForIssues { get; set; } = false;
@@ -106,6 +137,12 @@ public partial class VRCSdkControlPanel : EditorWindow
     void BuilderAssemblyReload()
     {
         ResetIssues();
+    }
+
+    public void setBanner(Texture2D texture2D)
+    {
+        _bannerImage = texture2D;
+        Reset();
     }
 
     public void OnGUIError(Object subject, string output, System.Action show, System.Action fix)
