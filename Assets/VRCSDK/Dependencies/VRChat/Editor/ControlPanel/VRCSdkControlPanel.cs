@@ -41,6 +41,7 @@ public partial class VRCSdkControlPanel : EditorWindow
     public static GUIStyle scrollViewSeparatorStyle;
     public static GUIStyle searchBarStyle;
     private bool isSettings = false;
+    private int showPanelOld = 0;
 
     void InitializeStyles()
     {
@@ -190,6 +191,14 @@ public partial class VRCSdkControlPanel : EditorWindow
         if (GUI.Button(new Rect (SdkWindowWidth - 40 , 10, 30, 30), Icons.Settings))
         {
             isSettings = !isSettings;
+            if (isSettings)
+            {
+                VRCSettings.ActiveWindowPanel = -1;
+            }
+            else
+            {
+                VRCSettings.ActiveWindowPanel = showPanelOld;
+            }
         }
         
 
@@ -217,9 +226,10 @@ public partial class VRCSdkControlPanel : EditorWindow
             showPanel = 0;
         }
 
-        if (showPanel != VRCSettings.ActiveWindowPanel)
+        if (showPanel != VRCSettings.ActiveWindowPanel && !isSettings)
         {
             VRCSettings.ActiveWindowPanel = showPanel;
+            showPanelOld = showPanel;
         }
 
         GUILayout.EndVertical();
