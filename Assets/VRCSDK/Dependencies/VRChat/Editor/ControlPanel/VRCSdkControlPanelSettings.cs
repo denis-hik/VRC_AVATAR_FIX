@@ -130,6 +130,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             }
             EditorGUILayout.LabelField("Client Version Date", clientVersionDate);
             EditorGUILayout.LabelField("SDK Version Date", sdkVersionDate);
+            EditorGUILayout.LabelField("UI", "Fi by Denis Hik");
 
             EditorGUILayout.EndVertical();
         }

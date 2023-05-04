@@ -73,11 +73,17 @@ namespace VRCSDK.Dependencies.VRChat.Scripts.DenisHik
 
             if (customSkin.FindStyle("Button_Custom") != null)
             {
+                GUI.Button(
+                    new Rect(58, 10, 100, 30),
+                    displayName,
+                    !isActive
+                        ? customSkin.GetStyle("Button_Custom_settings_active")
+                        : customSkin.GetStyle("Button_Custom_settings"));
                 if (GUI.Button(
                         new Rect(10, 10, 50, 30),
                         icon, 
                         !isActive ? customSkin.GetStyle("Button_Custom_settings_active") : customSkin.GetStyle("Button_Custom_settings"))
-                        )
+                   )
                 {
                     onClick();
                 }

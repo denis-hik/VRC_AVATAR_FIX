@@ -209,7 +209,16 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         EnvConfig.SetActiveSDKDefines();
 
-        int showPanel = GUILayout.Toolbar(VRCSettings.ActiveWindowPanel, _toolbarLabels, (isSettings || isAcc) ? new bool[2] {false, false} : APIUser.IsLoggedIn ? _toolbarOptionsLoggedIn : _toolbarOptionsNotLoggedIn,  null, GUILayout.Width(SdkWindowWidth));
+        int showPanel = -1;
+        if (!isAcc && !isSettings)
+        {
+            showPanel = GUILayout.Toolbar(VRCSettings.ActiveWindowPanel, _toolbarLabels, (isSettings || isAcc) ? new bool[2] {false, false} : APIUser.IsLoggedIn ? _toolbarOptionsLoggedIn : _toolbarOptionsNotLoggedIn,  null, GUILayout.Width(SdkWindowWidth));
+        }
+        else
+        {
+            GUILayout.Label(isAcc ? "Profile" : "Settings" );
+        }
+         
 
         // Only show Account or Settings panels if not logged in
         if (APIUser.IsLoggedIn == false && showPanel != 3)
@@ -234,10 +243,9 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         if (isAcc)
         {
-            
             ShowAccount();
         }
-        else
+        if (!isAcc && !isSettings)
         {
             switch (showPanel)
             {
@@ -248,7 +256,6 @@ public partial class VRCSdkControlPanel : EditorWindow
                     ShowContent();
                     break;
                 default:
-                    ShowBuilders();
                     break;
             }
         }
