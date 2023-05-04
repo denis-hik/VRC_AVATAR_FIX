@@ -186,7 +186,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             isSettings = settings;
             isAcc = false;
         });
-        CustomUI.ShowUserBlock(() =>
+        CustomUI.ShowUserBlock(isAcc, () =>
         {
             isSettings = false;
             isAcc = !isAcc;
@@ -234,6 +234,7 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         if (isAcc)
         {
+            
             ShowAccount();
         }
         else

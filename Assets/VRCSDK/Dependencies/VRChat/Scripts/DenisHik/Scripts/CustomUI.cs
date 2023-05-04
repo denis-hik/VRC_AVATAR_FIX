@@ -28,7 +28,16 @@ namespace VRCSDK.Dependencies.VRChat.Scripts.DenisHik
         public delegate void onSettings(bool isSettings);
         static public void ShowSettingsButton(bool isSettings, int showPanelOld, int SdkWindowWidth, onSettings onSettings)
         {
-            if (GUI.Button(new Rect (SdkWindowWidth - 40 , 10, 30, 30), (Texture2D)EditorGUIUtility.IconContent("Settings").image))
+            
+            GUISkin customSkin = (GUISkin) Resources.Load("Styles\\StyleCustom");
+            Texture2D icon = (Texture2D) Resources.Load("Images\\Settings Normal");
+            Texture2D iconOn = (Texture2D) Resources.Load("Images\\Settings Active");
+            
+            if (GUI.Button(
+                    new Rect (SdkWindowWidth - 50 , 10, 50, 30),
+                    isSettings ? iconOn : icon, 
+                    !isSettings ? customSkin.GetStyle("Button_Custom_settings_active") : customSkin.GetStyle("Button_Custom_settings"))
+                )
             {
                 isSettings = !isSettings;
                 if (isSettings)
@@ -44,7 +53,7 @@ namespace VRCSDK.Dependencies.VRChat.Scripts.DenisHik
             }
         }
         public delegate void onClick();
-        static public void ShowUserBlock(onClick onClick)
+        static public void ShowUserBlock(bool isActive, onClick onClick)
         {
             GUISkin customSkin;
             if (APIUser.CurrentUser == null)
@@ -53,17 +62,22 @@ namespace VRCSDK.Dependencies.VRChat.Scripts.DenisHik
             }
 
             customSkin = (GUISkin) Resources.Load("Styles\\StyleCustom");
+            Texture2D icon = (Texture2D) Resources.Load("Images\\user");
             string displayName = APIUser.CurrentUser.displayName;
             string url = APIUser.CurrentUser.currentAvatarImageUrl;
-            string icon = APIUser.CurrentUser.userIcon;
-            if (icon != null && icon.Length > 5)
+            string iconURL = APIUser.CurrentUser.userIcon;
+            if (icon != null && iconURL.Length > 5)
             {
-                url = icon;
+                url = iconURL;
             }
 
             if (customSkin.FindStyle("Button_Custom") != null)
             {
-                if (GUI.Button(new Rect(10, 10, 100, 30), displayName, customSkin.FindStyle("Button_Custom")))
+                if (GUI.Button(
+                        new Rect(10, 10, 50, 30),
+                        icon, 
+                        !isActive ? customSkin.GetStyle("Button_Custom_settings_active") : customSkin.GetStyle("Button_Custom_settings"))
+                        )
                 {
                     onClick();
                 }
