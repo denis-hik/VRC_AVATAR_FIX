@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine.Networking;
 using VRC.Core;
 using VRCSDK.Dependencies.VRChat.Editor;
+using VRCSDK.Dependencies.VRChat.Scripts.DenisHik;
 
 public partial class VRCSdkControlPanel : EditorWindow
 {
@@ -327,7 +328,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                     if (uploadedWorlds.Count > 0)
                         tmpWorlds = new List<ApiWorld>(uploadedWorlds);
 
-                    foreach (ApiWorld w in tmpWorlds)
+                    foreach (var (w, index) in tmpWorlds.Select((value, i) => ( value, i )))
                     {
                         if (justDeletedContents != null && justDeletedContents.Contains(w.id))
                         {
@@ -348,7 +349,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                             if (GUILayout.Button(ImageCache[w.id], GUILayout.Height(WORLD_IMAGE_BUTTON_HEIGHT),
                                 GUILayout.Width(WORLD_IMAGE_BUTTON_WIDTH)))
                             {
-                                Application.OpenURL(w.imageUrl);
+                                Application.OpenURL("https://vrchat.com/home/world/" + w.id);
                             }
                         }
                         else
@@ -356,7 +357,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                             if (GUILayout.Button("", GUILayout.Height(WORLD_IMAGE_BUTTON_HEIGHT),
                                 GUILayout.Width(WORLD_IMAGE_BUTTON_WIDTH)))
                             {
-                                Application.OpenURL(w.imageUrl);
+                                Application.OpenURL("https://vrchat.com/home/world/" + w.id);
                             }
                         }
 
@@ -370,27 +371,17 @@ public partial class VRCSdkControlPanel : EditorWindow
                         else
                         {
                             EditorGUILayout.BeginVertical();
+                            
                             EditorGUILayout.LabelField(w.name, descriptionStyle);
                         }
-
-                        EditorGUILayout.LabelField("Release Status: " + w.releaseStatus,
-                            GUILayout.Width(WORLD_RELEASE_STATUS_FIELD_WIDTH));
-                        if (GUILayout.Button("Copy ID", GUILayout.Width(COPY_WORLD_ID_BUTTON_WIDTH)))
-                        {
-                            TextEditor te = new TextEditor();
-                            te.text = w.id;
-                            te.SelectAll();
-                            te.Copy();
-                        }
-
-                        if (GUILayout.Button("Delete", GUILayout.Width(DELETE_WORLD_BUTTON_WIDTH)))
+                        CustomUI.ShowDeleteButton(465, ((index + 0) * 120) + 45, () =>
                         {
                             if (EditorUtility.DisplayDialog("Delete " + w.name + "?",
-                                "Are you sure you want to delete " + w.name + "? This cannot be undone.", "Delete",
-                                "Cancel"))
+                                    "Are you sure you want to delete " + w.name + "? This cannot be undone.", "Delete",
+                                    "Cancel"))
                             {
                                 foreach (VRC.Core.PipelineManager pm in FindObjectsOfType<VRC.Core.PipelineManager>()
-                                    .Where(pm => pm.blueprintId == w.id))
+                                             .Where(pm => pm.blueprintId == w.id))
                                 {
                                     pm.blueprintId = "";
                                     pm.completedSDKPipeline = false;
@@ -409,7 +400,22 @@ public partial class VRCSdkControlPanel : EditorWindow
                                 justDeletedContents.Add(w.id);
                                 updatedContent = true;
                             }
-                        }
+                        });
+
+                        CustomUI.ShowPlayButton(430, ((index + 0) * 120) + 45, () =>
+                        {
+                            Application.OpenURL("https://vrchat.com/home/launch?worldId=" + w.id);
+                        });
+                        CustomUI.ShowCopyIDButton(390, ((index + 0) * 120) + 45, () =>
+                        {
+                            TextEditor te = new TextEditor();
+                            te.text = w.id;
+                            te.SelectAll();
+                            te.Copy();
+                        });
+
+                        EditorGUILayout.LabelField("Release Status: " + w.releaseStatus,
+                            GUILayout.Width(WORLD_RELEASE_STATUS_FIELD_WIDTH));
 
                         if (expandedLayout)
                             EditorGUILayout.EndHorizontal();
@@ -582,7 +588,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                     if (testAvatars.Count > 0)
                         tmpAvatars = new List<ApiAvatar>(testAvatars);
 
-                    foreach (ApiAvatar a in tmpAvatars)
+                    foreach (var (a, index) in tmpAvatars.Select((value, i) => ( value, i )))
                     {
                         if (!a.name.ToLowerInvariant().Contains(searchString.ToLowerInvariant()))
                         {
@@ -601,7 +607,20 @@ public partial class VRCSdkControlPanel : EditorWindow
                                 ? position.width - MAX_ALL_INFORMATION_WIDTH + AVATAR_DESCRIPTION_FIELD_WIDTH
                                 : AVATAR_DESCRIPTION_FIELD_WIDTH));
 
-                        if (GUILayout.Button("Delete", GUILayout.Width(DELETE_AVATAR_BUTTON_WIDTH)))
+                        // if (GUILayout.Button("Delete", GUILayout.Width(DELETE_AVATAR_BUTTON_WIDTH)))
+                        // {
+                        //     if (EditorUtility.DisplayDialog("Delete " + a.name + "?",
+                        //         "Are you sure you want to delete " + a.name + "? This cannot be undone.", "Delete",
+                        //         "Cancel"))
+                        //     {
+                        //         API.Delete<ApiAvatar>(a.id);
+                        //         testAvatars.RemoveAll(avatar => avatar.id == a.id);
+                        //         File.Delete(a.assetUrl);
+                        //
+                        //         updatedContent = true;
+                        //     }
+                        // }
+                        CustomUI.ShowDeleteButton(0, 0, () =>
                         {
                             if (EditorUtility.DisplayDialog("Delete " + a.name + "?",
                                 "Are you sure you want to delete " + a.name + "? This cannot be undone.", "Delete",
@@ -610,10 +629,10 @@ public partial class VRCSdkControlPanel : EditorWindow
                                 API.Delete<ApiAvatar>(a.id);
                                 testAvatars.RemoveAll(avatar => avatar.id == a.id);
                                 File.Delete(a.assetUrl);
-
+                            
                                 updatedContent = true;
                             }
-                        }
+                        });
 
                         if (expandedLayout)
                             EditorGUILayout.EndHorizontal();
@@ -673,10 +692,10 @@ public partial class VRCSdkControlPanel : EditorWindow
             EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Fetch updated records from the VRChat server");
-            if( GUILayout.Button("Fetch") )
+            CustomUI.ShowUpdateButton(() =>
             {
                 ClearContent();
-            }
+            });
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space();
             GUILayout.EndVertical();

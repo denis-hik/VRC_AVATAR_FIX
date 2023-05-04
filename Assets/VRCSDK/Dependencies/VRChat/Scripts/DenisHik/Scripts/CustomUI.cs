@@ -70,5 +70,112 @@ namespace VRCSDK.Dependencies.VRChat.Scripts.DenisHik
             }
                
         }
+
+        static public void ShowUpdateButton(onClick onClick)
+        {
+            GUIStyle style = new GUIStyle()
+            {
+                fixedWidth = 15,
+                fixedHeight = 15,
+                margin = new RectOffset(0, 10, 0, 0),
+            };
+            Texture2D repeatIcon = (Texture2D) Resources.Load("Images\\Refresh");
+            
+            if (GUILayout.Button(repeatIcon, style))
+            {
+                onClick();
+            }
+        }
+        static public void ShowCopyButton(onClick onClick)
+        {
+            GUIStyle style = new GUIStyle()
+            {
+                fixedWidth = 15,
+                fixedHeight = 15,
+                margin = new RectOffset(0, 10, 0, 0),
+            };
+            Texture2D repeatIcon = (Texture2D) Resources.Load("Images\\Documents");
+            
+            if (GUILayout.Button(repeatIcon, style))
+            {
+                onClick();
+            }
+        }
+        static public void ShowDeleteButton(int x, int y, onClick onClick)
+        {
+            GUIStyle style = new GUIStyle()
+            {
+                fixedWidth = 15,
+                fixedHeight = 15,
+                margin = new RectOffset(0, 10, 0, 0),
+            };
+            Texture2D deleteIcon = (Texture2D) Resources.Load("Images\\Delete");
+            
+            if (x > 0 || y > 0)
+            {
+                if (GUI.Button(new Rect(x, y, 30, 30), deleteIcon))
+                {
+                    onClick();
+                }
+            } else {
+                if (GUILayout.Button(deleteIcon, style))
+                {
+                    onClick();
+                }
+            }
+            
+            
+        }
+        static public void ShowPlayButton(int x, int y, onClick onClick)
+        {
+            GUIStyle style = new GUIStyle()
+            {
+                fixedWidth = 15,
+                fixedHeight = 15,
+                margin = new RectOffset(0, 10, 0, 0),
+            };
+            Texture2D deleteIcon = (Texture2D) Resources.Load("Images\\Play");
+            
+            if (x > 0 || y > 0)
+            {
+                if (GUI.Button(new Rect(x, y, 30, 30), deleteIcon))
+                {
+                    onClick();
+                }
+            } else {
+                if (GUILayout.Button(deleteIcon, style))
+                {
+                    onClick();
+                }
+            }
+            
+            
+        }
+        
+        static public void ShowCopyIDButton(int x, int y, onClick onClick)
+        {
+            GUIStyle style = new GUIStyle()
+            {
+                fixedWidth = 15,
+                fixedHeight = 15,
+                margin = new RectOffset(0, 10, 0, 0),
+            };
+            Texture2D deleteIcon = (Texture2D) Resources.Load("Images\\ID");
+            
+            if (x > 0 || y > 0)
+            {
+                if (GUI.Button(new Rect(x, y, 30, 30), deleteIcon))
+                {
+                    onClick();
+                }
+            } else {
+                if (GUILayout.Button(deleteIcon, style))
+                {
+                    onClick();
+                }
+            }
+            
+            
+        }
     }
 }

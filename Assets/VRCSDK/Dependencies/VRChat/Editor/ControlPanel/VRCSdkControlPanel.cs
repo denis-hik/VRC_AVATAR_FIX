@@ -240,15 +240,14 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             switch (showPanel)
             {
-                case 1:
+                case 0:
                     ShowBuilders();
                     break;
-                case 2:
+                case 1:
                     ShowContent();
                     break;
-                case 0:
                 default:
-                    ShowAccount();
+                    ShowBuilders();
                     break;
             }
         }

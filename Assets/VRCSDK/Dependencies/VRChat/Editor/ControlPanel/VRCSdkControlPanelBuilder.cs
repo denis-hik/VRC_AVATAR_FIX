@@ -60,7 +60,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                     if (texture != null)
                     {
                         isLoad = true;
-                        _bannerImage = Utils.Resize(texture, 500,100);
+                        _bannerImage = Utils.Resize(texture, 500,200);
                     }
                 }
             }
