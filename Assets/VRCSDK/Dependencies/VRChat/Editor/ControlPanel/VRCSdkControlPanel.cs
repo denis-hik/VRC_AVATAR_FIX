@@ -41,6 +41,7 @@ public partial class VRCSdkControlPanel : EditorWindow
     public static GUIStyle scrollViewSeparatorStyle;
     public static GUIStyle searchBarStyle;
     private bool isSettings = false;
+    private bool isAcc = false;
     private int showPanelOld = 0;
 
     void InitializeStyles()
@@ -154,15 +155,14 @@ public partial class VRCSdkControlPanel : EditorWindow
 
     public const int SdkWindowWidth = 518;
 
-    private readonly GUIContent[] _toolbarLabels = new GUIContent[3]
+    private readonly GUIContent[] _toolbarLabels = new GUIContent[2]
     {
-        new GUIContent("Authentication"),
         new GUIContent("Builder"),
         new GUIContent("Content Manager"),
     };
 
-    private readonly bool[] _toolbarOptionsLoggedIn = new bool[3] {true, true, true};
-    private readonly bool[] _toolbarOptionsNotLoggedIn = new bool[3] {true, false, false};
+    private readonly bool[] _toolbarOptionsLoggedIn = new bool[2] {true, true};
+    private readonly bool[] _toolbarOptionsNotLoggedIn = new bool[2] {false, false};
 
     void OnGUI()
     {
@@ -180,27 +180,18 @@ public partial class VRCSdkControlPanel : EditorWindow
         GUILayout.BeginVertical();
 
         GUILayout.Box(_bannerImage);
-        GUIStyle s = new GUIStyle()
-        {
-            fixedWidth = 20f,
-            fixedHeight = 20f,
-            imagePosition = ImagePosition.ImageOnly,
-            padding = new RectOffset(0, 0, 0, 0),
 
-        };
-        if (GUI.Button(new Rect (SdkWindowWidth - 40 , 10, 30, 30), Icons.Settings))
+        CustomUI.ShowSettingsButton(isSettings, showPanelOld, SdkWindowWidth, settings =>
         {
-            isSettings = !isSettings;
-            if (isSettings)
-            {
-                VRCSettings.ActiveWindowPanel = -1;
-            }
-            else
-            {
-                VRCSettings.ActiveWindowPanel = showPanelOld;
-            }
-        }
-        
+            isSettings = settings;
+            isAcc = false;
+        });
+        CustomUI.ShowUserBlock(() =>
+        {
+            isSettings = false;
+            isAcc = !isAcc;
+        });
+
 
         if (Application.isPlaying)
         {
@@ -218,15 +209,15 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         EnvConfig.SetActiveSDKDefines();
 
-        int showPanel = GUILayout.Toolbar(VRCSettings.ActiveWindowPanel, _toolbarLabels, isSettings ? new bool[3] {false, false, false} : APIUser.IsLoggedIn ? _toolbarOptionsLoggedIn : _toolbarOptionsNotLoggedIn,  null, GUILayout.Width(SdkWindowWidth));
+        int showPanel = GUILayout.Toolbar(VRCSettings.ActiveWindowPanel, _toolbarLabels, (isSettings || isAcc) ? new bool[2] {false, false} : APIUser.IsLoggedIn ? _toolbarOptionsLoggedIn : _toolbarOptionsNotLoggedIn,  null, GUILayout.Width(SdkWindowWidth));
 
         // Only show Account or Settings panels if not logged in
         if (APIUser.IsLoggedIn == false && showPanel != 3)
         {
-            showPanel = 0;
+            isAcc = true;
         }
 
-        if (showPanel != VRCSettings.ActiveWindowPanel && !isSettings)
+        if (showPanel != VRCSettings.ActiveWindowPanel && !isSettings && !isAcc)
         {
             VRCSettings.ActiveWindowPanel = showPanel;
             showPanelOld = showPanel;
@@ -239,6 +230,11 @@ public partial class VRCSdkControlPanel : EditorWindow
         if (isSettings)
         {
             ShowSettings();
+        }
+
+        if (isAcc)
+        {
+            ShowAccount();
         }
         else
         {

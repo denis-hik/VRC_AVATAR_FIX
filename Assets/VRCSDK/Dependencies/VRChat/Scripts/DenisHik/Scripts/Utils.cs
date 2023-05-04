@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Pumkin.Dependencies;
+﻿using System.Drawing;
 using UnityEngine;
-using UnityEngine.Networking;
+using Color = UnityEngine.Color;
+using Graphics = UnityEngine.Graphics;
 
 namespace VRCSDK.Dependencies.VRChat.Scripts.DenisHik
 {
@@ -22,6 +16,11 @@ namespace VRCSDK.Dependencies.VRChat.Scripts.DenisHik
             result.ReadPixels(new Rect(0,0,targetX,targetY),0,0);
             result.Apply();
             return result;
+        }
+
+        public static void setRounded()
+        {
+            
         }
     }
 }
