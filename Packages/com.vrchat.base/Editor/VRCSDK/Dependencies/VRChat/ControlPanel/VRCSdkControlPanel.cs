@@ -178,6 +178,28 @@ public partial class VRCSdkControlPanel : EditorWindow
         GUILayout.BeginVertical();
 
         GUILayout.Box(_bannerImage);
+        
+        if (APIUser.CurrentUser != null)
+        {
+            string url = APIUser.CurrentUser.currentAvatarImageUrl;
+            
+            Debug.Log(url);
+            
+            if (url != null && !isLoad)
+            {
+                Debug.Log(">" + url);
+                Utils u = new Utils();
+                EditorCoroutine.Start(VRCCachedWebRequest.Get(url, OnDone));
+                void OnDone(Texture2D texture)
+                {
+                    if (texture != null)
+                    {
+                        isLoad = true;
+                        _bannerImage = Utils.Resize(texture, 500,200);
+                    }
+                }
+            }
+        }
 
         CustomUI.ShowSettingsButton(isSettings, showPanelOld, SdkWindowWidth, settings =>
         {

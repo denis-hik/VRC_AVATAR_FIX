@@ -116,7 +116,7 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         if (APIUser.IsLoggedIn)
         {
-            OnCreatorStatusGUI();
+            CustomUI.OnCreatorStatusGUI();
         }
 
         EditorGUILayout.EndVertical();
@@ -136,7 +136,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         GUILayout.Space(ACCOUNT_LOGIN_BORDER_SPACING);
-        GUILayout.BeginVertical("Account", "window", GUILayout.Height(150), GUILayout.Width(340));
+        GUILayout.BeginVertical("Account", "window", GUILayout.Height(100), GUILayout.Width(340));
 
         if (signingIn)
         {
@@ -147,12 +147,12 @@ public partial class VRCSdkControlPanel : EditorWindow
             if (Status != "Connected")
                 EditorGUILayout.LabelField(Status);
 
-            OnCreatorStatusGUI();
+            CustomUI.OnCreatorStatusGUI();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("");
 
-            if (GUILayout.Button("Logout"))
+            CustomUI.OnLogoutButton(() =>
             {
                 storedUsername = username = null;
                 storedPassword = password = null;
@@ -160,7 +160,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                 VRC.Tools.ClearCookies();
                 APIUser.Logout();
                 ClearContent();
-            }
+            });
             GUILayout.EndHorizontal();
         }
         else

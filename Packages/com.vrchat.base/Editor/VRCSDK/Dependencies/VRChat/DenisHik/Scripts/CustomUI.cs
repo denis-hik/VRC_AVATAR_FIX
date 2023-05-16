@@ -226,5 +226,40 @@ namespace VRCSDK.Dependencies.VRChat.Scripts.DenisHik
 
             onUpdate(username, password, serverEnvironment);
         }
+        
+        static public void OnCreatorStatusGUI()
+        {
+            EditorGUILayout.LabelField("Logged in as:", APIUser.CurrentUser.displayName);
+
+            //if (SDKClientUtilities.IsInternalSDK())
+            //    EditorGUILayout.LabelField("Developer Status: ", APIUser.CurrentUser.developerType.ToString());
+
+            EditorGUILayout.BeginHorizontal();
+
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.LabelField("World Creator Status: ", APIUser.CurrentUser.canPublishWorlds ? "✔" : "❌");
+            EditorGUILayout.LabelField("Avatar Creator Status: ", APIUser.CurrentUser.canPublishAvatars ? "✔" : "❌");
+            EditorGUILayout.EndVertical();
+
+            if (!APIUser.CurrentUser.canPublishAllContent)
+            {
+                if (GUILayout.Button("More Info..."))
+                {
+                    VRCSdkControlPanel.ShowContentPublishPermissionsDialog();
+                }
+            }
+
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        static public void OnLogoutButton(onClick onClick)
+        {
+            Texture2D deleteIcon = (Texture2D) Resources.Load("Images\\Logout");
+            if (GUI.Button(new Rect(395, 275, 30, 30), deleteIcon))
+            {
+                onClick();
+            }
+        }
     }
 }
