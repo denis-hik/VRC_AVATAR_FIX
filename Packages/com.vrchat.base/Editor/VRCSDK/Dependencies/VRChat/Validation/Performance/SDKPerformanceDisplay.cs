@@ -140,12 +140,12 @@ namespace VRC.SDKBase.Validation.Performance
                         }
                         case PerformanceRating.VeryPoor:
                         {
-                            displayLevel = PerformanceInfoDisplayLevel.Warning;
-                            text = string.Format(
-                                "This avatar's bounding box (AABB) is too large on at least one axis. Current size: {0}, Maximum size: {1}",
-                                perfStats.aabb.GetValueOrDefault().size.ToString(),
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor, isMobilePlatform).aabb.size.ToString());
-
+                            // displayLevel = PerformanceInfoDisplayLevel.Warning;
+                            // text = string.Format(
+                            //     "This avatar's bounding box (AABB) is too large on at least one axis. Current size: {0}, Maximum size: {1}",
+                            //     perfStats.aabb.GetValueOrDefault().size.ToString(),
+                            //     AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor, isMobilePlatform).aabb.size.ToString());
+                            //
                             break;
                         }
                     }

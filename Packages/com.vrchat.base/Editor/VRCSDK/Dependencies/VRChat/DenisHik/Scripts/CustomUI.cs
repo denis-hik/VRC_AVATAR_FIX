@@ -2,6 +2,7 @@
 using UnityEngine;
 using VRC.Core;
 using VRC.SDKBase.Editor;
+using VRChat.Analytics;
 
 namespace VRCSDK.Dependencies.VRChat.Scripts.DenisHik
 {
@@ -193,6 +194,37 @@ namespace VRCSDK.Dependencies.VRChat.Scripts.DenisHik
             }
             
             
+        }
+
+        public delegate void onLogin(string usernameResult, string passwordResult, ApiServerEnvironment serverEnvironmentResult);
+        public delegate void onUpdate(string usernameResult, string passwordResult, ApiServerEnvironment serverEnvironmentResult);
+        static public void ShowRegisterPanel(string username, string password, ApiServerEnvironment serverEnvironment, onLogin onLogin, onUpdate onUpdate)
+        {
+
+            ApiServerEnvironment newEnv = ApiServerEnvironment.Release;
+            if (VRCSettings.DisplayAdvancedSettings)
+                newEnv = (ApiServerEnvironment)EditorGUILayout.EnumPopup("Use API", serverEnvironment);
+            if (serverEnvironment != newEnv)
+                serverEnvironment = newEnv;
+
+            username = EditorGUILayout.TextField("Username/Email", username);
+            password = EditorGUILayout.PasswordField("Password", password);
+
+            if (GUILayout.Button("Sign In"))
+                onLogin(username, password, serverEnvironment);
+            if (GUILayout.Button("Sign up"))
+                Application.OpenURL("https://vrchat.com/register");
+
+            if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Return)
+            {
+                if (username.Length > 0 && password.Length > 0)
+                {
+                    Debug.Log("onEnter");
+                    onLogin(username, password, serverEnvironment);
+                } 
+            }
+
+            onUpdate(username, password, serverEnvironment);
         }
     }
 }

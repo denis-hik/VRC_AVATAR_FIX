@@ -3,6 +3,7 @@ using UnityEditor;
 using VRC.Core;
 using System.Text.RegularExpressions;
 using VRC.SDKBase.Editor;
+using VRCSDK.Dependencies.VRChat.Scripts.DenisHik;
 
 public enum TwoFactorType
 {
@@ -166,19 +167,18 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             InitAccount();
 
-            ApiServerEnvironment newEnv = ApiServerEnvironment.Release;
-                if (VRCSettings.DisplayAdvancedSettings)
-                    newEnv = (ApiServerEnvironment)EditorGUILayout.EnumPopup("Use API", serverEnvironment);
-            if (serverEnvironment != newEnv)
-                serverEnvironment = newEnv;
-
-            username = EditorGUILayout.TextField("Username/Email", username);
-            password = EditorGUILayout.PasswordField("Password", password);
-
-            if (GUILayout.Button("Sign In"))
+            CustomUI.ShowRegisterPanel(username, password, serverEnvironment, (s, password1, environment) =>
+            {
+                username = s;
+                password = password1;
+                serverEnvironment = environment;
                 SignIn(true);
-            if (GUILayout.Button("Sign up"))
-                Application.OpenURL("https://vrchat.com/register");
+            }, (result, passwordResult, environmentResult) =>
+            {
+                username = result;
+                password = passwordResult;
+                serverEnvironment = environmentResult;
+            });
         }
 
         OnTwoFactorAuthenticationGUI(twoFactorAuthenticationEntryType);
